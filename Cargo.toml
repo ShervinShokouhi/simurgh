@@ -1,0 +1,19 @@
+[package]
+name = "simurgh"
+version = "0.1.0"
+edition = "2024"
+authors = ["Shervin Shokouhi"]
+rust-version = "1.88"
+description = "Draw a pixel-art Simurgh from a GitHub account's public activity, as a looping GIF for a profile README."
+readme = "README.md"
+license = "MIT"
+keywords = ["github", "profile", "simurgh", "pixel-art", "gif"]
+categories = ["command-line-utilities", "visualization"]
+exclude = ["/.github", "/docs"]
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["std", "serde"] }
+gif = { version = "0.14", default-features = false, features = ["std"] }
+png = "0.18"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

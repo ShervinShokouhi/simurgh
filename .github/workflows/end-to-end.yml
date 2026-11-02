@@ -1,0 +1,39 @@
+name: End to end
+
+# Build simurgh from this checkout, collect the repository owner's real snapshot through
+# GitHub's API, render it, and attach the result. Nothing is committed. The Action's own
+# download path is proved by the release workflow instead, against each new release.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  collect-and-render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal
+      - name: Build
+        run: cargo +stable build --release --locked
+      - name: Collect the owner's snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run:
+          ./target/release/simurgh collect "$GITHUB_REPOSITORY_OWNER" --output
+          simurgh-snapshot.json
+      - name: Render the Simurgh
+        run:
+          ./target/release/simurgh render simurgh-snapshot.json --output-dir
+          simurgh-output
+      - name: Attach the Simurgh
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: simurgh
+          path: simurgh-output/
+          if-no-files-found: error

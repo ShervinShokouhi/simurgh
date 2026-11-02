@@ -1,0 +1,79 @@
+name: git-profile-simurgh
+description:
+  Draw a GitHub account's Simurgh from its public activity as a looping GIF, a still
+  PNG, and a preview, for a profile README.
+branding:
+  icon: feather
+  color: yellow
+
+inputs:
+  login:
+    description: Account whose Simurgh to draw.
+    default: ${{ github.repository_owner }}
+  body:
+    description: Body color, one of zarrin, firuzeh, lajvard, sepid, shab, or arghavan.
+    default: zarrin
+  output-dir:
+    description:
+      Folder, relative to the workspace, that receives simurgh.gif, simurgh.png, and
+      preview.html.
+    default: simurgh
+  token:
+    description:
+      Token for reading the account's public data; the built-in token is enough.
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - name: Download the Simurgh release this Action belongs to
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        ACTION_REPOSITORY: ${{ github.action_repository }}
+      run: |
+        version=$(grep -m1 '^version' "$GITHUB_ACTION_PATH/Cargo.toml" | cut -d'"' -f2)
+        # A local `uses: ./` leaves the action repository empty: then the Action lives in
+        # the workflow's own repository.
+        repository="${ACTION_REPOSITORY:-$GITHUB_REPOSITORY}"
+        case "$RUNNER_OS-$RUNNER_ARCH" in
+          Linux-X64) target=x86_64-unknown-linux-musl ;;
+          Linux-ARM64) target=aarch64-unknown-linux-musl ;;
+          macOS-X64) target=x86_64-apple-darwin ;;
+          macOS-ARM64) target=aarch64-apple-darwin ;;
+          *)
+            echo "simurgh has no build for $RUNNER_OS $RUNNER_ARCH; use ubuntu-latest" >&2
+            exit 1
+            ;;
+        esac
+        archive="simurgh-$version-$target.tar.gz"
+        install_dir="$RUNNER_TEMP/simurgh"
+        mkdir -p "$install_dir"
+        if ! gh release download "v$version" --repo "$repository" --dir "$install_dir" \
+            --pattern "$archive" --pattern "$archive.sha256"; then
+          echo "release v$version has no asset $archive; reference the Action at a release tag" >&2
+          exit 1
+        fi
+        cd "$install_dir"
+        if command -v sha256sum > /dev/null; then
+          sha256sum -c "$archive.sha256"
+        else
+          shasum -a 256 -c "$archive.sha256"
+        fi
+        tar -xzf "$archive"
+        echo "$install_dir/simurgh-$version-$target" >> "$GITHUB_PATH"
+    - name: Collect the account snapshot
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        SIMURGH_LOGIN: ${{ inputs.login }}
+      run:
+        simurgh collect "$SIMURGH_LOGIN" --output "$RUNNER_TEMP/simurgh-snapshot.json"
+    - name: Render the Simurgh
+      shell: bash
+      env:
+        SIMURGH_BODY: ${{ inputs.body }}
+        SIMURGH_OUTPUT_DIR: ${{ inputs.output-dir }}
+      run:
+        simurgh render "$RUNNER_TEMP/simurgh-snapshot.json" --output-dir
+        "$SIMURGH_OUTPUT_DIR" --body "$SIMURGH_BODY"

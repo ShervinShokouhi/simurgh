@@ -1,0 +1,40 @@
+# Copy into your profile repository as .github/workflows/simurgh.yml, then embed
+# <img src="simurgh/simurgh.gif" width="256" alt="My Simurgh"> in its README.md.
+name: Simurgh
+
+on:
+  schedule:
+    # Just after midnight UTC, so the Simurgh shows the day that just ended.
+    - cron: "20 0 * * *"
+  workflow_dispatch:
+  push:
+    paths: [.github/workflows/simurgh.yml]
+
+permissions:
+  contents: write
+
+concurrency: simurgh
+
+jobs:
+  simurgh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Replace OWNER/REPO with the repository that holds your copy of this project,
+      # and pin a release tag of that repository.
+      - uses: OWNER/REPO@v0.1.0
+        with:
+          body: zarrin
+          output-dir: simurgh
+      - name: Commit the Simurgh if it changed
+        shell: bash
+        run: |
+          git add simurgh/simurgh.gif
+          if git diff --cached --quiet; then
+            echo "The Simurgh is unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --quiet --message "simurgh: draw the day's Simurgh"
+          git push --quiet
