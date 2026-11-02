@@ -10,16 +10,16 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Simurgh, a fork of git-koi that draws a pixel-art Simurgh instead of a koi. The
-  collection, history, development, and streak logic and the GitHub Action are
-  carried over; the renderer, the motion, the plumage, and the behaviors are new.
+- Simurgh, a fork of git-koi that draws a pixel-art Simurgh instead of a koi.
+  The collection, history, development, and streak logic and the GitHub Action
+  are carried over; the renderer, the motion, the plumage, and the behaviors are
+  new.
 - Six bodies: `zarrin`, `firuzeh`, `lajvard`, `sepid`, `shab`, and `arghavan`.
 - Tail streamers colored by the account's languages, in proportion to their
   shares, and a golden farr for the current streak.
 - Five behaviors: glide, soar, perch, seed fall, and sleep.
 - English and Persian READMEs (`README.md`, `README.fa.md`) and getting-started
-  guides, with growth
-  stages, behaviors, the farr, and sample GIFs.
+  guides, with growth stages, behaviors, the farr, and sample GIFs.
 - `generate-docs`, an example that regenerates the README pictures.
 
 ### Changed

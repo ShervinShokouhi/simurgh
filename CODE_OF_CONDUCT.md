@@ -61,8 +61,8 @@ representative at an online or offline event.
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported privately to the community leaders responsible for enforcement, through
 the repository's Security tab ("Report a vulnerability") or by a message to the
-maintainer on LinkedIn: https://www.linkedin.com/in/shervin-shokouhi/. All complaints will be reviewed and investigated
-promptly and fairly.
+maintainer on LinkedIn: https://www.linkedin.com/in/shervin-shokouhi/. All
+complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
 reporter of any incident.

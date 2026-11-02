@@ -8,7 +8,8 @@ The latest release receives security fixes. Older releases do not.
 
 Report a vulnerability privately through GitHub: open the repository's Security
 tab and choose "Report a vulnerability", or message the maintainer on LinkedIn
-(https://www.linkedin.com/in/shervin-shokouhi/). Do not open a public issue for a vulnerability.
+(https://www.linkedin.com/in/shervin-shokouhi/). Do not open a public issue for
+a vulnerability.
 
 Include the command or workflow that triggers the problem and what an attacker
 gains from it. You will hear back within seven days, and the fix ships in a
